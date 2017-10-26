@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.angemimi.dao.SessionDAO;
+import com.angemimi.model.Session;
 import com.angemimi.storage.StorageSession;
 
 /**
@@ -33,7 +35,8 @@ public class ProtectedServlet extends HttpServlet {
 		if(cookies != null){
 			for(Cookie cookie: cookies){
 				if((cookie != null) && (cookie.getName().equals("auth"))){
-					if(StorageSession.sessionAccess(cookie.getValue())){
+					Session sess = SessionDAO.getInstance().getSession(cookie.getName());
+					if(sess.isValid(cookie.getValue())){
 						request.getRequestDispatcher("protected.jsp").forward(request, response);
 						return;
 					}

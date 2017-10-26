@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.angemimi.dao.SessionDAO;
 import com.angemimi.dao.UserDAO;
+import com.angemimi.model.Session;
 import com.angemimi.model.User;
 import com.angemimi.storage.StorageSession;
 import com.angemimi.storage.StorageUsers;
@@ -54,7 +56,9 @@ public class LoginServlet extends HttpServlet {
 			// Validité des identifiant
 			// Creations des cookie
 			Cookie cookieAuth = new Cookie("auth",UUID.randomUUID().toString());
-			StorageSession.sessionId = cookieAuth.getValue();
+			
+			Session sess = new Session(cookieAuth.getName(), cookieAuth.getValue());
+			SessionDAO.getInstance().create(sess); //Creation de la session dans la base de donnée
 			
 			response.addCookie(cookieAuth);
 			System.out.println("Cookie added");
